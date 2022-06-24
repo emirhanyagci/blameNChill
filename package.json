@@ -1,0 +1,14 @@
+{
+  "name": "blame",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "tailwind": "npx tailwindcss -i ./input.css -o ./dist/output.css -w"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.1.4"
+  }
+}

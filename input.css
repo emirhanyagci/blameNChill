@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.glassBG{
+    border-radius: 8px;
+    background: linear-gradient(rgba(95, 10, 135,0.7),rgba(164, 80, 139,0.7));
+}
+.glassBG > div{
+    background: #253b4f;
+
+}
+.containerOfBlames > div{
+background:linear-gradient(to top,#000000,#E056FD);
+}
+.blameLineWrap > div{
+    border-radius: 8px;
+    width: 15rem;
+    height: 7rem;
+    background-color: #253b4f;
+
+}
+.getBlameWrap{
+  
+    box-shadow:0 0 51px rgba(0, 56, 82, 0.74);
+}
