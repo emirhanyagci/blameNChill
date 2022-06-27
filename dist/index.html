@@ -5,15 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="output.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://unpkg.com/vue@3"></script>
+    <script src="../node_modules/web3/dist/web3.min.js"></script>
     <script src="app.js" defer></script>
     <title>Document</title>
   </head>
   <body class="h-full bg-[rgb(0,0,0,0.9)] overflow-hidden">
     <div id="app">
+       
       <!--Background & blames container-->
 
-      <div class="absolute -top-60 -left-52 space-y-10 -rotate-[29deg]">
+      <div class="absolute -top-96 -left-[29rem] space-y-10 -rotate-[29deg]">
         <div class="blameLineWrap flex space-x-7">
           <div></div>
           <div></div>
@@ -23,6 +26,16 @@
           <div></div>
           <div></div>
         </div>
+        <div class="blameLineWrap flex space-x-7">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+
         <div class="blameLineWrap flex space-x-7">
           <div></div>
           <div></div>
@@ -95,20 +108,45 @@
         class="text-white absolute left-[2.5%] h-full w-[95%] top-0 overflow-hidden"
       >
         <!--write blame  & top blame & new blame-->
-        <div class="flex justify-around pt-10">
-          <div class="glassBG w-72 h-96 bg-[rgb(255, 255, 255, 0.2);] relative">
+        <div class="flex justify-around pt-10 h-[35rem] ">
+          
+          <div
+            class="showBoosted w-96 h-[35rem] relative"
+          >
+      asd
+        </div>
+          <div class="h-[35rem]">
+          <img src="imgs/logox2.png" class="max-h-[5rem] m-auto mb-3" alt="">
+          <div class="w-96 rounded-md h-[29.5rem] getBlameWrap flex justify-start flex-col items-center pt-7">
+            <p ref="userWallet">Lorem, ipsum dolor.</p>
+            <input  placeholder="Nickname"  class="w-[30%] p-3 text-lg outline-none  border-b-2 border-white bg-transparent mb-10 focus:border-purple-600" type="text" ref="nickInput">
+            <textarea placeholder="Write Blame..." ref="blameInput" class="w-[80%] rounded-lg text-lg bg-transparent border-gray-300 border-2 resize-none outline-none p-3 focus:border-purple-600" name="" id="" cols="30" rows="5" ></textarea>
+            <div class="flex justify-center pt-4">
+            
+              <button ref="connectWalletBtn" v-if="!isConnected" @click="connectWallet()" class="mt-8 bg-purple-600 cursor-pointer px-7 py-3 rounded-xl font-semibold text-white z-50" style="    background: linear-gradient(to left,#009FFD,#2A2A72);
+              ">Connect Wallet</button> 
+              <button @click="approve()"  v-if="isConnected && !isApproved" class="mt-8 cursor-pointer px-7 py-3 rounded-xl font-semibold text-white z-50" style="background: linear-gradient(to right,#009FFD,#2A2A72);
+              ">Approve</button>   
+            <button @click="sendBlame()" v-if="isApproved && isConnected" class="bg-purple-600 py-3 px-9 text-lg font-semibold rounded-xl mt-8 transition-all duration-300 hover:bg-purple-500" @click="sendBlame">Send Blame</button>
+            </div>
           </div>
-          <div class="w-72 h-96 rounded-md bg-[#253b4f] getBlameWrap"></div>
-          <div class="glassBG w-72 h-96 bg-[rgb(255, 255, 255, 0.2);]"></div>
+        </div>
+          <div
+          
+            class="glassBG overflow-x-hidden overflow-scroll w-96 h-[35rem] bg-[rgb(255, 255, 255, 0.2);]"
+          >
+       
+            <div class="text-center">
+          <input @input="searchBlame()" placeholder="Find blame.." class="mb-4 bg-transparent outline-none border-b-2 border-white px-4 py-2 mt-3 text-base" type="text">
+        </div>
+          <div ref="searchBlameWrap" class="searchBlameWrapper p-3"></div>
+    
+        </div>
         </div>
         <!--showroom of blames-->
-        <div class="h-full flex pt-14 absolute w-full">
-          <div class="flex justify-evenly space-x-6 px-5 containerOfBlames">
-            <div class="w-60 h-28 rounded-lg text-sm">
-              Lorem ipsum dolor sit amet.
-            </div>
-            <div class="w-60 h-28 rounded-lg"></div>
-          </div>
+        <div class="h-full flex pt-24 absolute w-full">
+          <div class="flex justify-evenly space-x-14 px-5 containerOfBlames absolute !ease-linear" style="left:0px"  ref="blameItemContainer">
+           
         </div>
       </div>
     </div>
