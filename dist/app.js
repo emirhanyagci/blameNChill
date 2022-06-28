@@ -1,9 +1,113 @@
 Vue.createApp({
   data() {
     return {
-      contractABI: [{"inputs":[{"internalType":"address payable","name":"tokenAddress","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"arrayLength","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"blameCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"__blameId","type":"uint256"}],"name":"boostBlame","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"userName","type":"string"},{"internalType":"string","name":"yourBlame","type":"string"}],"name":"createBlame","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_blameId","type":"uint256"}],"name":"deleteBlame","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_id","type":"uint256"}],"name":"getBlameDetail","outputs":[{"internalType":"string","name":"","type":"string"},{"internalType":"string","name":"","type":"string"},{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],
+      contractABI: [
+        {
+          inputs: [
+            {
+              internalType: "address payable",
+              name: "tokenAddress",
+              type: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        { inputs: [], name: "AlreadyClaimed", type: "error" },
+        {
+          inputs: [],
+          name: "arrayLength",
+          outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "blameCount",
+          outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+          name: "blameOwner",
+          outputs: [{ internalType: "address", name: "", type: "address" }],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            { internalType: "uint256", name: "__blameId", type: "uint256" },
+          ],
+          name: "boostBlame",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "claimBlame",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            { internalType: "string", name: "userName", type: "string" },
+            { internalType: "string", name: "yourBlame", type: "string" },
+          ],
+          name: "createBlame",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            { internalType: "uint256", name: "_blameId", type: "uint256" },
+          ],
+          name: "deleteBlame",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [{ internalType: "uint256", name: "_id", type: "uint256" }],
+          name: "getBlameDetail",
+          outputs: [
+            { internalType: "string", name: "", type: "string" },
+            { internalType: "string", name: "", type: "string" },
+            { internalType: "uint256", name: "", type: "uint256" },
+            { internalType: "uint256", name: "", type: "uint256" },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [{ internalType: "uint256", name: "value", type: "uint256" }],
+          name: "ownerClaim",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [{ internalType: "address", name: "", type: "address" }],
+          name: "userClaimed",
+          outputs: [
+            { internalType: "uint256", name: "claimed", type: "uint256" },
+            { internalType: "uint256", name: "earnedCoin", type: "uint256" },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "witdhdrawEarnings",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
 
-      tokenContractOwner: "0x6a411Be2a84eaf31d9F6092CA08F364Fb9Fe1350",
       tokenContractABI: [
         {
           inputs: [
@@ -165,12 +269,17 @@ Vue.createApp({
           type: "function",
         },
       ],
+
+      tokenContractOwner: "0x6a411Be2a84eaf31d9F6092CA08F364Fb9Fe1350",
+      contractAdress: "0xdd45DDbE29a80c2DA8173A0756be1858F44C5A0a",
+
       isBack: false,
       isConnected: false,
       isApproved: false,
       userWallet: null,
       contract: null,
       tokenContract: null,
+      isClaimed: false,
       blames: [],
 
       isTransaction: false,
@@ -180,10 +289,15 @@ Vue.createApp({
   methods: {
     connectWallet() {
       if (window.ethereum) {
-        alert;
+        this.showAlert(
+          "This transaction may take a few seconds",
+          3000,
+          "#ffbf00"
+        );
         var connect = ethereum
           .request({ method: "eth_requestAccounts" })
           .then((wallet) => {
+            this.showAlert("Connection Success", 2000, "#21ce67");
             this.userWallet = wallet[0];
 
             let shortWallet = `${wallet[0].substr(0, 6)}...${wallet[0].substr(
@@ -194,72 +308,104 @@ Vue.createApp({
             this.$refs.userWallet.textContent = shortWallet;
 
             localStorage.setItem("wallet", this.userWallet);
+            //check user cliamed or not
+            this.contract.methods
+              .userClaimed(this.userWallet)
+              .call()
+              .then(() => {
+                this.isClaimed = true;
+              });
+            //check user approved or not
+
+            this.tokenContract.methods
+              .allowance(this.userWallet, this.contractAdress)
+              .call()
+              .then((data) => {
+                if (data > 0) {
+                  this.isApproved = true;
+                }
+              });
+          })
+          .catch(() => {
+            this.showAlert("Transaction Rejected", 2300, "#f13131");
           });
       } else {
-        alert("Meta Mask Yükleyin");
+        this.showAlert("You should download metamask", 2300, "#f13131");
       }
     },
+
     approve() {
+      this.showAlert(
+        "This transaction may take a few seconds",
+        3000,
+        "#ffbf00"
+      );
       this.tokenContract.methods
-        .allowance(this.tokenContractOwner, this.userWallet)
+        .allowance(this.userWallet, this.contractAdress)
         .call()
         .then((data) => {
-          if (false) {
+          if (data > 0) {
+            this.showAlert("You Already Approved", 2000, "#21ce67");
             this.isApproved = true;
           } else {
             this.tokenContract.methods
-              .approve(
-                "0x09C4e9088Fa3080C9A3652808002eDbc2534d576",
-                "9999999999999999999"
-              )
+              .approve(this.contractAdress, "9999999999999999999")
               .send({
                 from: this.userWallet,
               })
               .then(() => {
-                event.currentTarget.classList.add("hidden");
+                this.showAlert("Approved Succes", 2000, "#21ce67");
                 this.isApproved = true;
               })
               .catch(() => {
-                alert("rejected");
+                this.showAlert("Transaction Rejected", 2300, "#f13131");
               });
           }
         });
     },
-    async sendBlame() {
-      if (this.isConnected == true) {
-        this.contract.methods
-          .createBlame(this.$refs.nickInput.value, this.$refs.blameInput.value)
-          .send({
-            from: this.userWallet,
-          })
-          .then(()=>{
-            alert("blame gönderildi ")
-          })
-      }
-    },
-    sendBlame() {
-      this.tokenContract.methods
-        .allowance(
-          "0x6a411Be2a84eaf31d9F6092CA08F364Fb9Fe1350",
-          this.userWallet
-        )
-        .call()
-        .then((data) => {
+    getToken() {
+      this.showAlert(
+        "This transaction may take a few seconds",
+        3000,
+        "#ffbf00"
+      );
+      this.contract.methods
+        .claimBlame()
+        .send({
+          from: this.userWallet,
+        })
+        .then(() => {
+          this.showAlert("Free Tokens Claimed", 2000, "#21ce67");
+          this.isClaimed = true;
+        })
+        .catch(() => {
+          this.showAlert("Transaction Rejected", 2300, "#f13131");
         });
+    },
+
+    sendBlame() {
+      this.showAlert(
+        "This transaction may take a few seconds",
+        3000,
+        "#ffbf00"
+      );
+
       //nickInputblameInput
       let nickname = this.$refs.nickInput.value;
       let blameText = this.$refs.blameInput.value;
-      this.contract.methods.createBlame(nickname, blameText).send({
-        from: this.userWallet,
-      });
-    },
-    boostBlame(id) {
       this.contract.methods
-        .getBlameDetail(id)
-        .call()
-        .then((data) => {
+        .createBlame(nickname, blameText)
+        .send({
+          from: this.userWallet,
+        })
+        .then(() => {
+          this.showAlert("Blame Sended", 2000, "#21ce67");
+        })
+        .catch(() => {
+          this.showAlert("Transaction Rejected", 2300, "#f13131");
         });
     },
+
     searchBlame() {
       Array.from(this.$refs.searchBlameWrap.children).forEach(
         (blames, index) => {
@@ -275,13 +421,31 @@ Vue.createApp({
         }
       );
     },
+    showAlert($childMessage, $stayMiliSecond, bgColor) {
+      let walletAlert = this.$refs.alertBox;
+      let closeWalletAlertBtn = this.$refs.closeAlertBtn;
+      walletAlert.style.backgroundColor = bgColor;
+      walletAlert.children[1].innerHTML = $childMessage;
+      walletAlert.style.animationName = "showFTop";
+      setTimeout(() => {
+        walletAlert.style.animationName = "hideFTop";
+      }, $stayMiliSecond);
+
+      closeWalletAlertBtn.addEventListener("click", () => {
+        walletAlert.style.animationName = "hideFTop";
+      });
+    },
   },
   async mounted() {
+    //localStorage.clear();
+    // console.log(window.innerHeight-60);
+
+    this.$refs.blamesGeneralWrap.style.height = `${window.innerHeight}px`;
 
     const web3 = await new Web3(window.ethereum);
     const contract = await new web3.eth.Contract(
       this.contractABI,
-      "0x09C4e9088Fa3080C9A3652808002eDbc2534d576"
+      this.contractAdress
     );
 
     this.contract = contract;
@@ -290,25 +454,25 @@ Vue.createApp({
       "0x48116fF4c9d494D5300Ac6524508Fec3B36E1734"
     );
 
-    let blameCount =Number(await this.contract.methods.blameCount().call());
+    //only pure blames
+    let blameCount = Number(await this.contract.methods.blameCount().call());
+    //blames array count with free blame
     let totalBlame = await this.contract.methods.arrayLength().call();
     for (let i = 0; i < totalBlame; i++) {
-      console.log(i);
+      //get every blame and add to dom
       this.contract.methods
         .getBlameDetail(i)
         .call()
         .then((data) => {
-        
-          if (data["0"] != '') {
-           
-            
+          if (data["0"] != "") {
             let blameOwner = data["0"];
             let blameContent = data["1"];
+            let boostCount = data["2"];
             let blameID = data["3"];
             let blameItemSyntax = `
             <div class="blameItem relative" >
             <div blameId="${blameID}" class="absolute hidden left-0 top-0 w-full h-full rounded-md flex justify-center space-x-5 items-center hover:bg-[rgb(124,44,229,0.9)] ">
-              <div blameId="${blameID}"><i class="fa-solid fa-angles-up cursor-pointer text-[2.5rem] rounded-xl py-5 px-6 hover:bg-white hover:text-green-500"></i></div>
+              <div blameId="${blameID}"><i class="fa-solid fa-angles-up cursor-pointer text-[2.5rem] rounded-xl py-3 px-6 hover:bg-white hover:text-green-500"></i></div>
               <div><i class="fa-solid fa-trash-can cursor-pointer text-[2.5rem] py-5 px-6  rounded-xl hover:bg-white hover:text-red-500 "></i></div>
             </div>
             <div class="flex mb-4 ">
@@ -318,19 +482,21 @@ Vue.createApp({
                 width="50px"
                 alt=""
               />
-              <div>
+              <div class="mr-20">
                 <div class="font-semibold">${blameOwner}</div>
                 <div>Jun 24 14:48</div>
+              </div>
+              <div class="font-semibold boostCount">
+              <i class="fa-solid fa-star"></i><span>${boostCount}</span> 
               </div>
             </div>
             <div>
              ${blameContent}
             </div>
           </div> `;
-      
+
             this.blames.push(blameItemSyntax);
             //add items to dom
-            console.log(this.blames.length,blameCount);
             if (this.blames.length == blameCount) {
               this.blames.forEach((item) => {
                 this.$refs.blameItemContainer.innerHTML += item;
@@ -342,36 +508,62 @@ Vue.createApp({
                   blames.children[0].children[0].addEventListener(
                     "click",
                     (E) => {
+                      this.showAlert(
+                        "This transaction may take a few seconds",
+                        3000,
+                        "#ffbf00"
+                      );
+
                       this.contract.methods
                         .getBlameDetail(id)
                         .call()
-                        .then((data) => {
-                        });
+                        .then((data) => {});
                       this.contract.methods
                         .boostBlame(id)
                         .send({
                           from: this.userWallet,
                         })
                         .then((data) => {
-                          alert("boostlandı");
+                          this.showAlert("Blame Boosted", 2000, "#21ce67");
+                        })
+                        .catch(() => {
+                          this.showAlert(
+                            "Transaction Rejected",
+                            2300,
+                            "#f13131"
+                          );
                         });
                     }
                   );
                   blames.children[0].children[1].addEventListener(
                     "click",
                     (E) => {
+                      this.showAlert(
+                        "This transaction may take a few seconds",
+                        3000,
+                        "#ffbf00"
+                      );
+
                       this.contract.methods
                         .deleteBlame(id)
                         .send({
                           from: this.userWallet,
                         })
                         .then(() => {
-                          alert("silindi");
+                          this.showAlert("Blame Deleted", 2000, "#21ce67");
+                        })
+                        .catch(() => {
+                          this.showAlert(
+                            "Transaction Rejected",
+                            2300,
+                            "#f13131"
+                          );
                         });
                     }
                   );
                 }
               );
+              let before;
               //Add to search blame
               this.blames.forEach((blames) => {
                 let blameSyntax = blames;
@@ -391,10 +583,19 @@ Vue.createApp({
                     "click",
                     () => {
                       this.contract.methods
-                        .getBlameDetail(id)
-                        .call()
+                        .boostBlame(id)
+                        .send({
+                          from: this.userWallet,
+                        })
                         .then((data) => {
-                          alert("boostlandı")
+                          this.showAlert("Blame Boosted", 2000, "#21ce67");
+                        })
+                        .catch(() => {
+                          this.showAlert(
+                            "Transaction Rejected",
+                            2300,
+                            "#f13131"
+                          );
                         });
                     }
                   );
@@ -402,23 +603,60 @@ Vue.createApp({
                   blames.children[0].children[1].addEventListener(
                     "click",
                     () => {
-                      blames.children[0].children[1].addEventListener(
-                        "click",
-                        (E) => {
-                          this.contract.methods
-                            .deleteBlame(id)
-                            .send({
-                              from: this.userWallet,
-                            })
-                            .then(() => {
-                              alert("silindi");
-                            });
-                        }
-                      );
+                      this.contract.methods
+                        .deleteBlame(id)
+                        .send({
+                          from: this.userWallet,
+                        })
+                        .then(() => {
+                          this.showAlert("Blame Deleted", 2000, "#21ce67");
+                        })
+                        .catch(() => {
+                          this.showAlert(
+                            "Transaction Rejected",
+                            2300,
+                            "#f13131"
+                          );
+                        });
                     }
                   );
                 }
               );
+
+              //add to boosted section
+              let top10 = [];
+              this.blames.forEach((blames) => {
+                const container = document.createElement("span");
+                container.innerHTML = blames;
+
+                let boostValue =
+                  container.children[0].children[1].children[2].children[1]
+                    .textContent;
+                let blameId =
+                  container.children[0].children[0].getAttribute("blameId");
+                top10.push(boostValue);
+              });
+              top10.sort((a, b) => {
+                return b - a;
+              });
+              let addedTopList = []
+              top10.forEach((boostCount) => {
+                
+                Array.from(this.$refs.searchBlameWrap.children).forEach(
+                  (blames) => {
+                    if ( blames.children[1].children[2].children[1].textContent == boostCount && blames.children[1].children[2].children[1].textContent != 0 && !addedTopList.includes(blames.children[0].getAttribute("blameid"))) {
+                      const cloneBlame = blames.cloneNode(true);
+                      let addedBlameİd = cloneBlame.children[0].getAttribute("blameid");
+                      addedTopList.push(addedBlameİd);
+                      this.$refs.boostedBlames.append(cloneBlame);
+                      
+                    }
+                  }
+                );
+              });
+
+              this.blames;
+              this.$refs.boostedBlames.innerHTML;
               //time is for set interval
               let time = null;
               function moveBlame(blameWrapper) {
@@ -454,14 +692,13 @@ Vue.createApp({
                 }
               }, time);
             }
-          }else{
+          } else {
             --i;
-         
           }
         });
     }
 
-    //if user already connected
+    //check user already connected
     if (localStorage.getItem("wallet").length > 5) {
       let wallet = localStorage.getItem("wallet");
       this.userWallet = wallet;
@@ -479,5 +716,7 @@ Vue.createApp({
           this.isApproved = true;
         });
     }
+
+    //if user already connected
   },
 }).mount("#app");

@@ -1,7 +1,6 @@
 {
   "name": "blame",
   "version": "1.0.0",
-  "description": "",
   "main": "script.js",
   "scripts": {
     "tailwind": "npx tailwindcss -i ./input.css -o ./dist/output.css -w"
@@ -13,5 +12,14 @@
   },
   "dependencies": {
     "web3": "^1.7.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emirhan-yagci/blameNChill.git"
+  },
+  "bugs": {
+    "url": "https://github.com/emirhan-yagci/blameNChill/issues"
+  },
+  "homepage": "https://github.com/emirhan-yagci/blameNChill#readme",
+  "description": ""
 }

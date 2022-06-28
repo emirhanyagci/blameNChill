@@ -1,10 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Mulish&display=swap');
+* {
+    font-family: 'Mulish', sans-serif;
 
+}
 .showBoosted{
     border-radius: 10px;
-    background: linear-gradient(rgba(95, 10, 135,0.7),rgba(164, 80, 139,0.7));
 
 }
 .blameItem{
@@ -13,19 +16,22 @@
 .glassBG{
     border-radius: 8px;
 }
-.glassBG::-webkit-scrollbar {
+.glassBG::-webkit-scrollbar ,.showBoosted::-webkit-scrollbar{
     width: 30px;
   }
 .glassBG > div{
    
 
 }
+.containerOfBlames{
+    bottom: 30px;
+    }
 .containerOfBlames > div{
     padding-top: 25px;
     padding: 20px;
     border-radius: 6px;
-    width: 25rem;
-    height: 12rem;
+    width: 22rem;
+    height: 11rem;
     font-size: 16px;
     background: #253b4f;
 }
@@ -40,9 +46,46 @@
   
     box-shadow:0 0 51px rgba(0, 56, 82, 0.74);
 }
-.searchBlameWrapper> div{
+.searchBlameWrapper> div,.showBoosted > div:not(.topContainer),.showBoosted > div > div{
     border-radius: 10px;
     padding: 15px;
     margin-bottom: 25px;
-    background: linear-gradient(rgba(95, 10, 135,0.7),rgba(164, 80, 139,0.7));
+    background: linear-gradient(rgba(95, 10, 135,0.8),rgba(164, 80, 139,0.8));
+}
+
+.boostCount{
+    position: absolute;
+    right: 19px;
+    color: white;
+}
+.boostCount i{
+    margin-right: 4px;
+}
+.walletAlert{
+    
+    animation-iteration-count: 1;
+    animation-timing-function: lienar;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+
+}
+@keyframes showFTop{
+    0%{
+        top: -80px;
+        opacity: 0;
+    }
+    100%{
+        top: 30px;
+        opacity: 1;
+    }
+}
+@keyframes hideFTop{
+    0%{
+        top: 30px;
+        opacity: 1;
+    }
+    100%{
+        top: -80px;
+        opacity: 0;
+    }
 }

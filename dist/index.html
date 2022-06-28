@@ -2,18 +2,33 @@
 <html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
+    <meta name="author" content="Emirhan Yağcı">
+    <meta name="author" content="Eren Yılmaz(Only Smart Contract)">
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="output.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" 
+    integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="icon" type="image/x-icon" href="https://st.depositphotos.com/2383249/4062/i/450/depositphotos_40622453-stock-photo-red-fantasy-lightning.jpg">
     <script src="https://unpkg.com/vue@3"></script>
-    <script src="../node_modules/web3/dist/web3.min.js"></script>
+    <script src="web3.min.js"></script>
     <script src="app.js" defer></script>
-    <title>Document</title>
+    <title>Blame & Chill</title>
   </head>
   <body class="h-full bg-[rgb(0,0,0,0.9)] overflow-hidden">
-    <div id="app">
-       
+    <!--
+
+          kırmızı    this.showAlert("You should change chain",2300,"#f13131");
+      sarı                              this.showAlert("This transaction may take a few seconds",3000,"#ffbf00");
+      yeşik                    this.showAlert("You already set approve",2000,"#21ce67");
+
+
+
+
+    -->
+    <div id="app" ref="app">
       <!--Background & blames container-->
 
       <div class="absolute -top-96 -left-[29rem] space-y-10 -rotate-[29deg]">
@@ -111,29 +126,36 @@
         <div class="flex justify-around pt-10 h-[35rem] ">
           
           <div
-            class="showBoosted w-96 h-[35rem] relative"
+           
+            class="showBoosted w-96 h-[30rem] relative overflow-x-hidden overflow-scroll"
           >
-      asd
+          <div class="font-semibold text-center">Top List</div>
+          <div  ref="boostedBlames" class="topContainer" >
+          
+          </div>
         </div>
-          <div class="h-[35rem]">
+          <div class="h-[30rem]">
           <img src="imgs/logox2.png" class="max-h-[5rem] m-auto mb-3" alt="">
-          <div class="w-96 rounded-md h-[29.5rem] getBlameWrap flex justify-start flex-col items-center pt-7">
+          <div class="w-96 rounded-md h-[24rem] getBlameWrap flex pb-5 justify-start flex-col items-center pt-7">
             <p ref="userWallet">Lorem, ipsum dolor.</p>
-            <input  placeholder="Nickname"  class="w-[30%] p-3 text-lg outline-none  border-b-2 border-white bg-transparent mb-10 focus:border-purple-600" type="text" ref="nickInput">
+            <input  placeholder="Nickname"  class="w-[30%] p-3 text-lg outline-none border-b-2 border-white bg-transparent mb-10 focus:border-purple-600" type="text" ref="nickInput">
             <textarea placeholder="Write Blame..." ref="blameInput" class="w-[80%] rounded-lg text-lg bg-transparent border-gray-300 border-2 resize-none outline-none p-3 focus:border-purple-600" name="" id="" cols="30" rows="5" ></textarea>
-            <div class="flex justify-center pt-4">
+            <div class="flex justify-center pt-2">
             
               <button ref="connectWalletBtn" v-if="!isConnected" @click="connectWallet()" class="mt-8 bg-purple-600 cursor-pointer px-7 py-3 rounded-xl font-semibold text-white z-50" style="    background: linear-gradient(to left,#009FFD,#2A2A72);
               ">Connect Wallet</button> 
-              <button @click="approve()"  v-if="isConnected && !isApproved" class="mt-8 cursor-pointer px-7 py-3 rounded-xl font-semibold text-white z-50" style="background: linear-gradient(to right,#009FFD,#2A2A72);
-              ">Approve</button>   
+            
+              <div @click="getToken()" v-if="isConnected && !isApproved && !isClaimed" style="background: linear-gradient(to right,#009FFD,#2A2A72);
+              " class="mt-8 bg-purple-600 cursor-pointer px-7 py-3 rounded-xl font-semibold text-white z-50">Claim Free Blame</div>
+            <button @click="approve()"  v-if="isConnected && !isApproved && isClaimed" class="mt-8 cursor-pointer px-7 py-3 rounded-xl font-semibold text-white z-50" style="background: linear-gradient(to right,#009FFD,#2A2A72);
+            ">Approve</button>  
             <button @click="sendBlame()" v-if="isApproved && isConnected" class="bg-purple-600 py-3 px-9 text-lg font-semibold rounded-xl mt-8 transition-all duration-300 hover:bg-purple-500" @click="sendBlame">Send Blame</button>
             </div>
           </div>
         </div>
           <div
-          
-            class="glassBG overflow-x-hidden overflow-scroll w-96 h-[35rem] bg-[rgb(255, 255, 255, 0.2);]"
+
+            class="glassBG overflow-x-hidden overflow-scroll w-96 h-[30rem] bg-[rgb(255, 255, 255, 0.2);]"
           >
        
             <div class="text-center">
@@ -144,9 +166,42 @@
         </div>
         </div>
         <!--showroom of blames-->
-        <div class="h-full flex pt-24 absolute w-full">
+        <div class="h-full flex w-full" ref="blamesGeneralWrap">
+          <div ref="alertBox" class="walletAlert fixed top-[-80px] opacity-0 z-50 left-1/2 translate-x-[-50%] text-white px-4 py-3 rounded-md"
+          role="alert" style="background-color:#edb036 ;">
+          <strong class="font-bold">Message <br></strong>
+          <span class="block sm:inline">You Should Connect With Wallet</span>
+          <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+              <svg ref="closeAlertBtn" class="closeWalletAlertBtn fill-current h-6 w-6 text-white" role="button"
+                  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <title>Close</title>
+                  <path
+                      d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+              </svg>
+          </span>
+      </div>
           <div class="flex justify-evenly space-x-14 px-5 containerOfBlames absolute !ease-linear" style="left:0px"  ref="blameItemContainer">
-           
+            <div class="blameItem relative" >
+              <div blameId="${blameID}" class="absolute hidden left-0 top-0 w-full h-full rounded-md flex justify-center space-x-5 items-center hover:bg-[rgb(124,44,229,0.9)] ">
+                <div blameId="${blameID}"><i class="fa-solid fa-angles-up cursor-pointer text-[2.5rem] rounded-xl py-5 px-6 hover:bg-white hover:text-green-500"></i></div>
+                <div><i class="fa-solid fa-trash-can cursor-pointer text-[2.5rem] py-5 px-6  rounded-xl hover:bg-white hover:text-red-500 "></i></div>
+              </div>
+              <div class="flex mb-4 ">
+                <img
+                  src="imgs/pp.jpeg"
+                  class="rounded-full mr-3 min-w-[50px]"
+                  width="50px"
+                  alt=""
+                />
+                <div>
+                  <div class="font-semibold">${blameOwner}</div>
+                  <div>Jun 24 14:48</div>
+                </div>
+              </div>
+              <div>
+               ${blameContent}
+              </div>
+            </div>
         </div>
       </div>
     </div>
