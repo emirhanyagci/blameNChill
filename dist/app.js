@@ -312,8 +312,14 @@ Vue.createApp({
             this.contract.methods
               .userClaimed(this.userWallet)
               .call()
-              .then(() => {
-                this.isClaimed = true;
+              .then((data) => {
+                if(data == 1){
+
+                  this.isClaimed = true;
+                }else{
+                  this.isClaimed = false;
+
+                }
               });
             //check user approved or not
 

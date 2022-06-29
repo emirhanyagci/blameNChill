@@ -145,11 +145,11 @@
               <button ref="connectWalletBtn" v-if="!isConnected" @click="connectWallet()" class="mt-8 bg-purple-600 cursor-pointer px-7 py-3 rounded-xl font-semibold text-white z-50" style="    background: linear-gradient(to left,#009FFD,#2A2A72);
               ">Connect Wallet</button> 
             
-              <div @click="getToken()" v-if="isConnected && !isApproved && !isClaimed" style="background: linear-gradient(to right,#009FFD,#2A2A72);
+              <div @click="getToken()" v-if="isConnected && !isClaimed" style="background: linear-gradient(to right,#009FFD,#2A2A72);
               " class="mt-8 bg-purple-600 cursor-pointer px-7 py-3 rounded-xl font-semibold text-white z-50">Claim Free Blame</div>
             <button @click="approve()"  v-if="isConnected && !isApproved && isClaimed" class="mt-8 cursor-pointer px-7 py-3 rounded-xl font-semibold text-white z-50" style="background: linear-gradient(to right,#009FFD,#2A2A72);
             ">Approve</button>  
-            <button @click="sendBlame()" v-if="isApproved && isConnected" class="bg-purple-600 py-3 px-9 text-lg font-semibold rounded-xl mt-8 transition-all duration-300 hover:bg-purple-500" @click="sendBlame">Send Blame</button>
+            <button @click="sendBlame()" v-if="isApproved && isConnected && isClaimed" class="bg-purple-600 py-3 px-9 text-lg font-semibold rounded-xl mt-8 transition-all duration-300 hover:bg-purple-500" @click="sendBlame">Send Blame</button>
             </div>
           </div>
         </div>
