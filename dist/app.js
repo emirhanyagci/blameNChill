@@ -379,7 +379,7 @@ Vue.createApp({
       const tokenAddress = '0x48116fF4c9d494D5300Ac6524508Fec3B36E1734';
       const tokenSymbol = 'BLAME';
       const tokenDecimals = 6;
-      const tokenImage = './imgs/logo.png';
+      const tokenImage = './imgs/tokenLogo.jpg';
      
       const wasAdded =  ethereum.request({
         method: 'wallet_watchAsset',
