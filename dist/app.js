@@ -271,7 +271,7 @@ Vue.createApp({
       ],
 
       tokenContractOwner: "0x6a411Be2a84eaf31d9F6092CA08F364Fb9Fe1350",
-      contractAdress: "0x4711E63E388662BD129ed14605046b4223d0625E",
+      contractAdress: "0xb3203e788de3A53886b94CbE723027845EB4C8E2",
 
       isBack: false,
       isConnected: false,
@@ -379,7 +379,7 @@ Vue.createApp({
       const tokenAddress = '0x48116fF4c9d494D5300Ac6524508Fec3B36E1734';
       const tokenSymbol = 'BLAME';
       const tokenDecimals = 6;
-      const tokenImage = './imgs/tokenLogo.jpg';
+      const tokenImage = 'https://cdn.discordapp.com/attachments/976515052435808326/992016633700810812/8jnhXC1P_400x400.jpg';
      
       const wasAdded =  ethereum.request({
         method: 'wallet_watchAsset',
