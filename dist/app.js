@@ -271,7 +271,7 @@ Vue.createApp({
       ],
 
       tokenContractOwner: "0x6a411Be2a84eaf31d9F6092CA08F364Fb9Fe1350",
-      contractAdress: "0xdd45DDbE29a80c2DA8173A0756be1858F44C5A0a",
+      contractAdress: "0x4711E63E388662BD129ed14605046b4223d0625E",
 
       isBack: false,
       isConnected: false,
@@ -740,9 +740,9 @@ Vue.createApp({
       .userClaimed(this.userWallet)
       .call()
       .then((data) => {
-        console.log(data);
+        console.log(data["0"],this.userWallet);
         if(data["0"] == 1){
-          
+      
           this.isClaimed = true;
         }else{
           this.isClaimed = false;
