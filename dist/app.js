@@ -287,7 +287,7 @@ Vue.createApp({
   },
 
   methods: {
-    connectWallet() {
+    async connectWallet() {
       if (window.ethereum) {
         this.showAlert(
           "This transaction may take a few seconds",
@@ -308,12 +308,13 @@ Vue.createApp({
             this.$refs.userWallet.textContent = shortWallet;
 
             localStorage.setItem("wallet", this.userWallet);
+              
             //check user cliamed or not
             this.contract.methods
               .userClaimed(this.userWallet)
               .call()
               .then((data) => {
-                if(data == 1){
+                if(data["0"] == 1){
 
                   this.isClaimed = true;
                 }else{
@@ -375,7 +376,25 @@ Vue.createApp({
         3000,
         "#ffbf00"
       );
-      this.contract.methods
+      const tokenAddress = '0x48116fF4c9d494D5300Ac6524508Fec3B36E1734';
+      const tokenSymbol = 'BLAME';
+      const tokenDecimals = 6;
+      const tokenImage = './imgs/logo.png';
+     
+      const wasAdded =  ethereum.request({
+        method: 'wallet_watchAsset',
+        params: {
+          type: 'ERC20', // Initially only supports ERC20, but eventually more!
+          options: {
+            address: "0x48116fF4c9d494D5300Ac6524508Fec3B36E1734", // The address that the token is at.
+            symbol: tokenSymbol, // A ticker symbol or shorthand, up to 5 chars.
+            decimals: tokenDecimals, // The number of decimals in the token
+            image: tokenImage, // A string url of the token logo
+          },
+        },
+      }).then(()=>{
+
+        this.contract.methods
         .claimBlame()
         .send({
           from: this.userWallet,
@@ -387,6 +406,8 @@ Vue.createApp({
         .catch(() => {
           this.showAlert("Transaction Rejected", 2300, "#f13131");
         });
+      })
+    
     },
 
     sendBlame() {
@@ -459,7 +480,7 @@ Vue.createApp({
       this.tokenContractABI,
       "0x48116fF4c9d494D5300Ac6524508Fec3B36E1734"
     );
-
+ 
     //only pure blames
     let blameCount = Number(await this.contract.methods.blameCount().call());
     //blames array count with free blame
@@ -715,12 +736,29 @@ Vue.createApp({
       this.isConnected = true;
       this.$refs.userWallet.textContent = shortWallet;
       //checkh user already approved
-      this.tokenContract.methods
-        .allowance(this.tokenContractOwner, this.userWallet)
-        .call()
-        .then(() => {
+      this.contract.methods
+      .userClaimed(this.userWallet)
+      .call()
+      .then((data) => {
+        console.log(data);
+        if(data["0"] == 1){
+          
+          this.isClaimed = true;
+        }else{
+          this.isClaimed = false;
+
+        }
+      });
+    //check user approved or not
+
+    this.tokenContract.methods
+      .allowance(this.userWallet, this.contractAdress)
+      .call()
+      .then((data) => {
+        if (data > 0) {
           this.isApproved = true;
-        });
+        }
+      });
     }
 
     //if user already connected
