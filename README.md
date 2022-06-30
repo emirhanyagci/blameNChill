@@ -28,6 +28,10 @@ Why people boost the blame ? because which token you boost it blame can delete f
 
 [Go Demo](https://blameandchill.netlify.app)
 
+## Contract Adress
+
+Main Contract -> *_ 0x4711E63E388662BD129ed14605046b4223d0625E _*
+
 ## Coming Soon
 
 - Disconnect Wallet
