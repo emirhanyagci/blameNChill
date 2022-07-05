@@ -30,7 +30,9 @@ Why people boost the blame ? because which token you boost it blame can delete f
 
 ## Contract Adress
 
-Main Contract -> ```bash ***0x4711E63E388662BD129ed14605046b4223d0625E*** ```
+Main Contract -> ```bash
+***0x4711E63E388662BD129ed14605046b4223d0625E*** 
+```
 
 Token Contract -> ***0x48116fF4c9d494D5300Ac6524508Fec3B36E1734***
 
