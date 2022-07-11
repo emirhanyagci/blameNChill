@@ -25,7 +25,6 @@ $ yarn add mosha-vue-toastify
 ```
 ```
 npm/yarn run tailwind
-
 ```
 ## Before Start
 
