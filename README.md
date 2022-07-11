@@ -16,6 +16,12 @@ Why people boost the blame ? because which token you boost it blame can delete f
 
 - Change Your Network as Kovan
 - [Get KovanETH for free](https://faucets.chain.link)
+```
+npm install 
+or
+yarn
+
+```
 
 ## QuickStart
 
