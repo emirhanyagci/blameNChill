@@ -26,7 +26,7 @@ Why people boost the blame ? because which token you boost it blame can delete f
 
 ![ss](https://github.com/emirhan-yagci/blameNChill/blob/master/screenchots/demo.png)
 
-[Go Demo](https://blameandchill.netlify.app)
+[Go Demo](https://blamenchillyagci.netlify.app)
 
 ## Contract Adress
 
