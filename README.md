@@ -11,17 +11,24 @@ Why people boost the blame ? because which token you boost it blame can delete f
 - Javascript
 - Vue.js (Option API)
 - Web3.js
+## Start Setup
+With NPM:
+
+```bash
+$ npm install mosha-vue-toastify
+```
+
+With Yarn:
+
+```bash
+$ yarn add mosha-vue-toastify
+```
 
 ## Before Start
 
 - Change Your Network as Kovan
 - [Get KovanETH for free](https://faucets.chain.link)
-```
-npm install 
-or
-yarn
 
-```
 
 ## QuickStart
 
