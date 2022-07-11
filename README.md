@@ -36,5 +36,4 @@ Token Contract -> ***0x48116fF4c9d494D5300Ac6524508Fec3B36E1734***
 
 ## Coming Soon
 -responsive!
-- Disconnect Wallet(You can print localStorage.clear() for disconnect for now)
 - Some bux fix
