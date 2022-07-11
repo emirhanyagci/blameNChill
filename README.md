@@ -23,7 +23,10 @@ With Yarn:
 ```bash
 $ yarn add mosha-vue-toastify
 ```
+```
+npm/yarn run tailwind
 
+```
 ## Before Start
 
 - Change Your Network as Kovan
