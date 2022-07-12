@@ -15,13 +15,13 @@ Why people boost the blame ? because which token you boost it blame can delete f
 With NPM:
 
 ```bash
-$ npm install mosha-vue-toastify
+$ npm install
 ```
 
 With Yarn:
 
 ```bash
-$ yarn add mosha-vue-toastify
+$ yarn
 ```
 Render Tailwind:
 ```
