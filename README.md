@@ -1,4 +1,4 @@
-## Unuseable for now because kovan testnet is down should change smart contracts
+## Unuseable for now because kovan testnet is down.Should change smart contracts
 # blameNChill
 
 > the purpose of the project write blame or complaint and feel chill.Eveybody can write,delte or boost remove of course all of this procces have a price as BLAME token
